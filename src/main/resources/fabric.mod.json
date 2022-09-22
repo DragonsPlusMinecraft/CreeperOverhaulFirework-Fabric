@@ -1,29 +1,28 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "creeper_overhaul_firework",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Creeper Overhaul Firework",
+  "description": "A Creeper Firework Addon for Creeper Overhaul mod",
   "authors": [
-    "Me!"
+    "MarbleGateKeeper"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/creeper-overhual-firework",
+    "sources": "https://github.com/DragonsPlusMinecraft/CreeperOverhaulFirework"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "WTFPL",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "plus.dragons.creeperoverhaulfirework.Firework"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "creeper_overhaul_firework.mixins.json"
   ],
 
   "depends": {

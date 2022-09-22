@@ -6,7 +6,7 @@
   "mixins": [
   ],
   "client": [
-    "ExampleMixin"
+    "plus.dragons.creeperoverhaulfirework.mixin.ExampleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
