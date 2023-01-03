@@ -29,12 +29,15 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.explosion.Explosion;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import software.bernie.geckolib3.core.IAnimatable;
 import tech.thatgravyboat.creeperoverhaul.common.entity.base.BaseCreeper;
+import tech.thatgravyboat.creeperoverhaul.common.entity.base.CreeperType;
 import tech.thatgravyboat.creeperoverhaul.common.utils.PlatformUtils;
 
 import java.util.*;
@@ -48,6 +51,10 @@ public abstract class MixinBaseCreeper extends CreeperEntity implements IAnimata
     public MixinBaseCreeper(EntityType<? extends CreeperEntity> entityType, World world) {
         super(entityType, world);
     }
+
+    @Final
+    @Shadow(remap = false)
+    public CreeperType type;
 
     @Inject(method = "explode", at = @At("HEAD"), cancellable = true, remap = false)
     private void injected(CallbackInfo ci) {
@@ -167,8 +174,8 @@ public abstract class MixinBaseCreeper extends CreeperEntity implements IAnimata
         }
 
         // Creeper Overhaul Part
-        if (!self.type.replacer().isEmpty()) {
-            Set<Map.Entry<Predicate<BlockState>, Function<net.minecraft.util.math.random.Random, BlockState>>> entries = self.type.replacer().entrySet();
+        if (!type.replacer().isEmpty()) {
+            Set<Map.Entry<Predicate<BlockState>, Function<net.minecraft.util.math.random.Random, BlockState>>> entries = type.replacer().entrySet();
             explosionRange.stream().map(BlockPos::down).forEach((pos) -> {
                 BlockState state = this.world.getBlockState(pos);
                 Iterator var4 = entries.iterator();
@@ -218,10 +225,10 @@ public abstract class MixinBaseCreeper extends CreeperEntity implements IAnimata
         }
 
         // Creeper Overhaul Part
-        if (!self.type.inflictingPotions().isEmpty()) {
+        if (!type.inflictingPotions().isEmpty()) {
             var players = victims.stream().filter(livingEntity -> livingEntity instanceof PlayerEntity).toList();
             players.forEach((player) -> {
-                Collection<StatusEffectInstance> inflictingPotions = self.type.inflictingPotions().stream().map(StatusEffectInstance::new).toList();
+                Collection<StatusEffectInstance> inflictingPotions = type.inflictingPotions().stream().map(StatusEffectInstance::new).toList();
                 inflictingPotions.forEach(player::addStatusEffect);
             });
         }
@@ -229,7 +236,7 @@ public abstract class MixinBaseCreeper extends CreeperEntity implements IAnimata
 
     private void spawnPotionCloud() {
         var self = ((BaseCreeper) (Object) this);
-        Stream<StatusEffectInstance> potions = Stream.concat(this.getStatusEffects().stream().map(StatusEffectInstance::new), self.type.potionsWhenDead().stream().map(StatusEffectInstance::new));
+        Stream<StatusEffectInstance> potions = Stream.concat(this.getStatusEffects().stream().map(StatusEffectInstance::new), type.potionsWhenDead().stream().map(StatusEffectInstance::new));
         ((SummonCloudWithEffectsMethodInvoker) self).invokeSummonCloudWithEffects(potions.toList());
     }
 
